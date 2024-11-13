@@ -25,7 +25,7 @@ namespace Cdk
             {
                 Runtime = Runtime.NODEJS_LATEST,
                 Code = Code.FromAsset("lib/lambda-handler"),
-                Handler = "index.handler"
+                Handler = "MetadataHandlerLambda::MetadataHandlerLambda.Function::FunctionHandler"
             });
 
             metadataHandlerFunction.AddEventSource(new S3EventSourceV2(storageBucket, new S3EventSourceProps

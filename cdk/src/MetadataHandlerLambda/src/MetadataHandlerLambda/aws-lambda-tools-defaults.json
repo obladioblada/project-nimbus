@@ -5,8 +5,9 @@
     "dotnet lambda help",
     "All the command line options for the Lambda command can be specified in this file."
   ],
-  "profile": "",
+  "profile": "localstack",
   "region": "",
+  "template": "serverless.template",
   "configuration": "Release",
   "function-runtime": "dotnet8",
   "function-memory-size": 512,
