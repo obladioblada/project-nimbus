@@ -3,6 +3,7 @@ using Amazon.Lambda.S3Events;
 using Amazon.Lambda.TestUtilities;
 using Amazon.S3;
 using Amazon.S3.Model;
+using MetadataHandlerLambda.Interfaces;
 using Moq;
 using Xunit;
 
@@ -13,12 +14,17 @@ public class FunctionTest
     [Fact]
     public async Task TestS3EventLambdaFunction()
     {
-        var mockS3Client = new Mock<IAmazonS3>();
-        var getObjectMetadataResponse = new GetObjectMetadataResponse();
-        getObjectMetadataResponse.Headers.ContentType = "text/plain";
+        var mockMetadataService = new Mock<IMetadataService>();
+        var getObjectMetadataResponse = new GetObjectMetadataResponse
+        {
+            Headers =
+            {
+                ContentType = "text/plain"
+            }
+        };
 
-        mockS3Client
-            .Setup(x => x.GetObjectMetadataAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+        mockMetadataService
+            .Setup(x => x.Save(It.IsAny<FileMetadata>()))
             .Returns(Task.FromResult(getObjectMetadataResponse));
 
         // Setup the S3 event object that S3 notifications would create with the fields used by the Lambda function.
@@ -44,7 +50,7 @@ public class FunctionTest
             Logger = testLambdaLogger
         };
 
-        var function = new Function(mockS3Client.Object);
+        var function = new Function(mockMetadataService.Object);
         await function.FunctionHandler(s3Event, testLambdaContext);
 
         Assert.Equal("text/plain", ((TestLambdaLogger)testLambdaLogger).Buffer.ToString().Trim());

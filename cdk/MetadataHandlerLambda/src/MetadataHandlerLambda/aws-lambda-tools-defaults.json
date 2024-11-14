@@ -6,7 +6,7 @@
     "All the command line options for the Lambda command can be specified in this file."
   ],
   "profile": "localstack",
-  "region": "",
+  "region": "eu-east-1",
   "template": "serverless.template",
   "configuration": "Release",
   "function-runtime": "dotnet8",

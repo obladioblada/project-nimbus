@@ -15,21 +15,20 @@ public class MetadataService : IMetadataService
         ArgumentNullException.ThrowIfNull(configuration);
         var tableName = configuration.GetValue<string>("Configuration:MetadataTableName");
         ArgumentException.ThrowIfNullOrWhiteSpace(tableName);
-        
         _dbContext = dynamoDbContext;
         _tableOperationConfig = new DynamoDBOperationConfig
         {
-            OverrideTableName = tableName
+            OverrideTableName = tableName,
         };
     }
     
-    public Task Save(CancellationToken cancellationToken)
+    public Task Save(FileMetadata fileMetadata)
     {
-        return _dbContext.SaveAsync("",_tableOperationConfig, cancellationToken);
+        return _dbContext.SaveAsync(fileMetadata, _tableOperationConfig);
     }
 
-    public Task Delete(CancellationToken cancellationToken)
+    public Task Delete(string file)
     {
-        return _dbContext.DeleteAsync("", _tableOperationConfig, cancellationToken);
+        return _dbContext.DeleteAsync(file, _tableOperationConfig);
     }
 }

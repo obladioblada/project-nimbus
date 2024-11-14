@@ -32,14 +32,15 @@ public class Function
             
             try
             {
-                var createdAt = record.EventTime;
-                var bucketName = s3Event.Bucket.Name;
-                var owner = s3Event.Bucket.OwnerIdentity.PrincipalId;
-                var objectKey = s3Event.Object.Key;
-                var size = s3Event.Object.Size;
-                var version = s3Event.Object.VersionId;
+                var metadata = new FileMetadata
+                {
+                    File = $"{s3Event.Bucket.OwnerIdentity.PrincipalId}#{s3Event.Bucket.Name}#{s3Event.Object.Key}",
+                    Timestamp = record.EventTime.ToUniversalTime().Ticks,
+                    Size = s3Event.Object.Size,
+                    Version = s3Event.Object.VersionId
+                };
 
-                await _metadataService.Save(new CancellationToken());
+                await _metadataService.Save(metadata);
             }
             catch (Exception e)
             {

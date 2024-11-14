@@ -18,12 +18,19 @@ public class Startup
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables()
             .Build();
-        
+
         services.AddSingleton<IConfiguration>(configuration);
 
         services.TryAddAWSService<IAmazonDynamoDB>();
-        services.TryAddSingleton<IDynamoDBContext, DynamoDBContext>();
-        services.TryAddSingleton<IMetadataService, MetadataService>();
+        
+        services.AddSingleton<IDynamoDBContext, DynamoDBContext>(p =>
+            new DynamoDBContext(new AmazonDynamoDBClient(new AmazonDynamoDBConfig()
+                {
+                    ServiceURL = "http://localhost:4566"
+                })
+            )
+        );
 
+        services.TryAddSingleton<IMetadataService, MetadataService>();
     }
 }
