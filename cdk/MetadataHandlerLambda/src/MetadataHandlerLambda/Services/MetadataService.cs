@@ -2,7 +2,7 @@
 using MetadataHandlerLambda.Interfaces;
 using Microsoft.Extensions.Configuration;
 
-namespace MetadataHandlerLambda;
+namespace MetadataHandlerLambda.Services;
 
 public class MetadataService : IMetadataService
 {

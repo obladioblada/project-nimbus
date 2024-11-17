@@ -1,7 +1,10 @@
 using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.S3Events;
+using Amazon.Runtime.Internal.Util;
 using MetadataHandlerLambda.Interfaces;
+using Microsoft.Extensions.Logging;
+using Logger = AWS.Lambda.Powertools.Logging.Logger;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -24,11 +27,15 @@ public class Function
     [LambdaFunction]
     public async Task FunctionHandler(S3Event evnt, ILambdaContext context)
     {
-        var eventRecords = evnt.Records ?? [];
-        foreach (var record in eventRecords)
+        Logger.LogInformation("Got event from s3");
+        foreach (var record in evnt.Records ?? [])
         {
             var s3Event = record.S3;
-            if (s3Event == null)  continue;
+            if (s3Event == null)
+            {
+                Logger.LogWarning("Empty s3 event");
+                continue;
+            }
             
             try
             {
@@ -41,13 +48,13 @@ public class Function
                 };
 
                 await _metadataService.Save(metadata);
+                Logger.LogInformation($"Metadata for {metadata.File} stored in dynamoDb.");
             }
             catch (Exception e)
             {
-                context.Logger.LogError(e.Message);
-                context.Logger.LogError(e.StackTrace);
+                Logger.LogError(e);
                 throw;
             }
-        }
+        }		
     }
 }
