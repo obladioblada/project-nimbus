@@ -28,6 +28,8 @@ public class Function
     public async Task<string> FunctionHandler(S3Event evnt, ILambdaContext context)
     {
         Logger.LogInformation("Got event from s3");
+        Logger.LogInformation(evnt);
+        
         var records = evnt.Records ?? [];
         if (records.Count == 0)
         {
@@ -54,8 +56,8 @@ public class Function
                     Version = s3Event.Object.VersionId
                 };
 
-                await _metadataService.Save(metadata);
-                Logger.LogInformation($"Metadata for {metadata.File} stored in dynamoDb.");
+                Logger.LogInformation($"Storing for {metadata.File} stored in dynamoDb.");
+                await _metadataService.SaveAsync(metadata);
             }
             catch (Exception e)
             {

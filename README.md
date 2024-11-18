@@ -61,7 +61,8 @@ aws lambda get-function-configuration --function-name  ProjectNimbusStack-metada
 ```shell
  aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name <dynamodb-table-name>
 ```
-
+Invoking the uploader imitates an API call via Api Gateway. For lack of time instead, we invoke the lambda by using the AWS CLI with the command above.  
+The lambda responses returning the presigned URL stored in the response.json file 
 
 aws --endpoint-url=http://localhost:4566  dynamodb list-tables
 

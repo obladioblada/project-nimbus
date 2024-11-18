@@ -80,7 +80,8 @@ namespace Cdk
                 Runtime = Runtime.DOTNET_8,
                 Handler = handler,
                 Code = Code.FromAsset(codePath),
-                Environment = environmentVariables
+                Environment = environmentVariables,
+                Timeout = Duration.Minutes(1)
             });
         }
         

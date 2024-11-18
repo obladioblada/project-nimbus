@@ -17,6 +17,9 @@
     document.getElementById("fileInput").addEventListener('change', handleFileChange);
     async function handleFileChange(e) {
         const URL = document.getElementById("url").value;
+        
+        //hack for local testing
+        let localTestingUrl  = URL.replace("https", "http")
         try {
             // take the first file from FilesList
             const file = e.target.files[0];
@@ -28,9 +31,10 @@
             
             console.log(name)
             console.log(type)
+            console.log(localTestingUrl)
             // Get upload URL
             let resp = await axios.put(
-                URL, {
+                localTestingUrl, {
                     contentType: type,
                     ext: name.split(".").pop(), // take only file extension
                     isPublic: true, // make it public so you can preview

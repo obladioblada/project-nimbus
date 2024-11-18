@@ -7,5 +7,5 @@ public interface IMetadataService
     /// </summary>
     /// <param name="fileMetadata">The metadata to store</param>
     /// <returns></returns>
-    Task<FileMetadata> Save(FileMetadata fileMetadata);
+    Task<FileMetadata> SaveAsync(FileMetadata fileMetadata);
 }

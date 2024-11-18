@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
+using AWS.Lambda.Powertools.Logging;
 using MetadataHandlerLambda.Interfaces;
 using Microsoft.Extensions.Configuration;
 
@@ -22,9 +23,10 @@ public class MetadataService : IMetadataService
         };
     }
     
-    public async Task<FileMetadata> Save(FileMetadata fileMetadata)
+    public async Task<FileMetadata> SaveAsync(FileMetadata fileMetadata)
     {
         await _dbContext.SaveAsync(fileMetadata, _tableOperationConfig);
+        Logger.LogInformation($"Metadata for {fileMetadata.File} stored in dynamoDb.");
         return fileMetadata;
     }
 }
