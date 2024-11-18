@@ -23,28 +23,26 @@ public class Function
     /// </summary>
     /// <param name="evnt">The event for the Lambda function handler to process.</param>
     /// <param name="context">The ILambdaContext that provides methods for logging and describing the Lambda environment.</param>
-    /// <returns></returns>
+    /// <returns>List of PK of saved files</returns>
     [LambdaFunction]
-    public async Task<string> FunctionHandler(S3Event evnt, ILambdaContext context)
+    public async Task<List<string>> FunctionHandler(S3Event evnt, ILambdaContext context)
     {
         Logger.LogInformation("Got event from s3");
         Logger.LogInformation(evnt);
+
+        var savedMetadataFiles = new List<string>();
         
         var records = evnt.Records ?? [];
         if (records.Count == 0)
         {
             Logger.LogWarning("No records found.");
-            return "No records found";
+            throw new EmptyEventException();
         }
         
         foreach (var record in evnt.Records ?? [])
         {
             var s3Event = record.S3;
-            if (s3Event == null)
-            {
-                Logger.LogWarning("Empty s3 event");
-                continue;
-            }
+            ArgumentNullException.ThrowIfNull(s3Event);
             
             try
             {
@@ -58,6 +56,7 @@ public class Function
 
                 Logger.LogInformation($"Storing for {metadata.File} stored in dynamoDb.");
                 await _metadataService.SaveAsync(metadata);
+                savedMetadataFiles.Add(metadata.File);
             }
             catch (Exception e)
             {
@@ -65,6 +64,6 @@ public class Function
                 throw;
             }
         }
-        return "ok";
+        return savedMetadataFiles;
     }
 }
