@@ -24,6 +24,28 @@ Because of time, the system is missing path handling and verification.
 
 ## Project Structure
 
+```
+├───cdk
+│   ├───cdk.out
+│   ├───lib
+│   ├───MetadataHandlerLambda
+│   │   ├───src
+│   │   │   └───MetadataHandlerLambda
+│   │   └───test
+│   │       └───MetadataHandlerLambda.Tests
+│   │           
+│   ├───src
+│   │   └───Cdk
+│   │      
+│   └───UploaderHandlerLambda
+│       └───src
+│           └───UploaderHandlerLambda
+├───nimbus.html
+├───response.json
+├───docker-compose.yml
+```
+
+
 ## Getting Started
 
 1. **Install CDK and CDKLocal:**
