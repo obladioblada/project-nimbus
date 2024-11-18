@@ -48,9 +48,9 @@ cdklocal synth
 cdklocal deploy
 ```
 
-[!WARNING]
+> [!IMPORTANT]  
+> The below snippet has to be run to bypass [localstack bug](https://stackoverflow.com/questions/78311472/aws-cdk-create-s3-event-notification-to-sqs-message-in-localstack) which doesn't properly create the s3 event notification using CDK. 
 
-The below snippet has to be run to bypass [localstack bug](https://stackoverflow.com/questions/78311472/aws-cdk-create-s3-event-notification-to-sqs-message-in-localstack) which doesn't properly create the s3 event notification using CDK. 
 ```shell
 aws --endpoint-url=http://localhost:4566 s3api put-bucket-notification-configuration --bucket storage-test --notification-configuration '{ \"LambdaFunctionConfigurations\": [ { \"Id\": \"file-upload-notification\", \"LambdaFunctionArn\": \"arn:aws:lambda:us-east-1:000000000000:function:metadata-handler-test\", \"Events\": [ \"s3:ObjectCreated:*\"] } ] }'                                                                                                                                                                      
 ```
@@ -84,8 +84,9 @@ aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name metadata-tab
 
 # Unit Tests
 
-Testing if not where close to be comprehensive. I decided to create some unit tests for the MetadataHandlerLambda lambda to show how I normally use to set them up.
-### MetadataHandlerLambda Project
+> [!NOTE]  
+> Testing if not where close to be comprehensive. I decided to create some unit tests for the MetadataHandlerLambda lambda to show how I normally use to set them up.
+### MetadataHandlerLambda Project.
 
 #### Execute unit tests
 ```
