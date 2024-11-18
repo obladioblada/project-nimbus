@@ -35,7 +35,7 @@ namespace Cdk
             var metadataHandlerFunction = CreateLambda(
                 "metadata-handler",
                 props.Config.env,
-                "MetadataHandlerLambda::MetadataHandlerLambda.Function::FunctionHandler",
+                "MetadataHandlerLambda::MetadataHandlerLambda.Function_FunctionHandler_Generated::FunctionHandler",
                 "lib/metadata-lambda-handler.zip",
                 new Dictionary<string, string>
                 {

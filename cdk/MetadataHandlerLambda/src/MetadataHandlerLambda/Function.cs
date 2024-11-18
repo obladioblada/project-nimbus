@@ -25,9 +25,16 @@ public class Function
     /// <param name="context">The ILambdaContext that provides methods for logging and describing the Lambda environment.</param>
     /// <returns></returns>
     [LambdaFunction]
-    public async Task FunctionHandler(S3Event evnt, ILambdaContext context)
+    public async Task<string> FunctionHandler(S3Event evnt, ILambdaContext context)
     {
         Logger.LogInformation("Got event from s3");
+        var records = evnt.Records ?? [];
+        if (records.Count == 0)
+        {
+            Logger.LogWarning("No records found.");
+            return "No records found";
+        }
+        
         foreach (var record in evnt.Records ?? [])
         {
             var s3Event = record.S3;
@@ -55,6 +62,7 @@ public class Function
                 Logger.LogError(e);
                 throw;
             }
-        }		
+        }
+        return "ok";
     }
 }

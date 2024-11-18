@@ -22,13 +22,9 @@ public class MetadataService : IMetadataService
         };
     }
     
-    public Task Save(FileMetadata fileMetadata)
+    public async Task<FileMetadata> Save(FileMetadata fileMetadata)
     {
-        return _dbContext.SaveAsync(fileMetadata, _tableOperationConfig);
-    }
-
-    public Task Delete(string file)
-    {
-        return _dbContext.DeleteAsync(file, _tableOperationConfig);
+        await _dbContext.SaveAsync(fileMetadata, _tableOperationConfig);
+        return fileMetadata;
     }
 }
