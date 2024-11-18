@@ -56,3 +56,10 @@ The lambda responses returning the presigned URL stored in the response.json fil
 
 aws --endpoint-url=http://localhost:4566  dynamodb list-tables
 
+# MetadataHandlerLambda Project
+
+Execute unit tests
+```
+    cd "cdk/MetadataHandlerLambda/test/MetadataHandlerLambda.Tests"
+    dotnet test
+```
