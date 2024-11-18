@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Nimbus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .drop-area {
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            color: #007bff;
+            background-color: #f9f9f9;
+        }
+
+        .drop-area.dragover {
+            background-color: #e0f7ff;
+        }
+
+        #fileInput {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- String input -->
+    <div class="input-group">
+        <label for="url">Presigned S3 URL</label>
+        <input type="text" id="url" placeholder="Enter the presigned s3 URL" style="
+                    width: 100%;
+                    height: 36px;
+                    border-radius: 4px;
+                    font-size: 14px;
+                    font-weight: normal;
+                    border: 1px solid rgb(137, 151, 155);
+                    transition: border-color 150ms ease-in-out 0s;
+                    outline: none;
+                    color: rgb(33, 49, 60);
+                    background-color: rgb(255, 255, 255);
+                
+                    :hover{
+                        box-shadow: rgb(231 238 236) 0px 0px 0px 3px;
+                    }
+                "/>
+    </div>
+
+    <!-- File input with drag-and-drop area -->
+    <div class="input-group">
+        <label>Upload File:</label>
+        <div class="drop-area" id="dropArea">
+            <p>Drag & drop your file here or click to upload</p>
+            <input type="file" id="fileInput" />
+        </div>
+        <p id="fileName"></p>
+    </div>
+    <p>Upload percentage: <span id="uploadPercent"></span> </p>
+</div>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script language="JavaScript">
+    const dropArea = document.getElementById("dropArea");
+    const fileInput = document.getElementById("fileInput");
+    const fileNameDisplay = document.getElementById("fileName");
+
+    // Highlight drop area on dragover
+    dropArea.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        dropArea.classList.add("dragover");
+    });
+
+    // Remove highlight on dragleave
+    dropArea.addEventListener("dragleave", () => {
+        dropArea.classList.remove("dragover");
+    });
+
+    // Handle dropped files
+    dropArea.addEventListener("drop", (event) => {
+        event.preventDefault();
+        dropArea.classList.remove("dragover");
+        const files = event.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            displayFileName(files[0])
+            handleFileChange(files[0]);
+        }
+    });
+
+    // Handle click to open file dialog
+    dropArea.addEventListener("click", () => {
+        fileInput.click();
+    });
+
+    // Handle file selection from file dialog
+    fileInput.addEventListener("change", (event) => {
+        const files = event.target.files;
+        if (files.length > 0) {
+            displayFileName(files[0])
+            handleFileChange(files[0]);
+        }
+    });
+
+    // Display selected file name
+    function displayFileName(file) {
+        fileNameDisplay.textContent = `Selected file: ${file.name}`;
+    }
+
+    async function handleFileChange(file) {
+        const URL = document.getElementById("url").value;
+
+        //hack for local testing
+        let localTestingUrl  = URL.replace("https", "http")
+        
+        try {
+            // Extract Content-Type & filename
+            const {
+                type,
+                name
+            } = file;
+            
+            // Get upload URL
+            let resp = await axios.put(
+                localTestingUrl, {
+                    contentType: type,
+                    ext: name.split(".").pop(), // take only file extension
+                    isPublic: true, // make it public so you can preview
+                }
+            );
+
+            await axios.put(URL, file, {
+                headers: {
+                    "Content-Type": file.type
+                },
+
+                onUploadProgress: (e) => {
+                    //  Show progress
+                    document.getElementById("uploadPercent").innerHTML = String(Math.round((e.loaded * 100) / e.total));
+                },
+            });
+
+            // suuccessfully uploaded
+            document.getElementById("uploadPercent").innerHTML = "Completed";
+        } catch (e) {
+            // Log errors
+            console.log(e);
+        }
+    }
+</script>
+</body>
+</html>
