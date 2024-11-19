@@ -5,6 +5,7 @@ which would be behind Api Gateway) and the dynamoDb metadata insertion by levera
 which triggers the lambda function in charge of updating the DynamoDb Table.  
 Because of time, the system is missing path handling and verification.
 To simulate the AWS cloud environment I used localstack so to be able to have a working example which would run locally.
+Used CDK for IaC to spin up the required resources.
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
