@@ -87,12 +87,16 @@ aws --endpoint-url=http://localhost:4566 s3api get-bucket-notification-configura
 
 ### Get Presigned URL
 
-In order to get the presigned URL to use to upload a file ( which should be a client application task) use the below
+In order to get the presigned URL to use to upload a file ( which should be a client application task) use the below.
+From the project root directory run:
 
 ```shell
 aws --endpoint-url=http://localhost:4566 lambda invoke --function-name uploader-handler-test  --cli-binary-format raw-in-base64-out  --payload '{ \"FileName\": \"file.txt\" }' response.json
 ```
-The lambda responses returning the presigned URL and saves it in the [response.json](response.json) file
+The lambda responses returning the presigned URL and saves it in the [response.json](response.json) file.
+
+> [!WARNING]  
+> Pay attention to the double quotes wrapping the URL we need to use in the next step.
 
 ### Upload file
 
