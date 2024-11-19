@@ -4,6 +4,7 @@ I decided to focus on the implementation of the file upload to s3 (by using a pr
 which would be behind Api Gateway) and the dynamoDb metadata insertion by leveraging the S3 event notification feature, 
 which triggers the lambda function in charge of updating the DynamoDb Table.  
 Because of time, the system is missing path handling and verification.
+To simulate the AWS cloud environment I used localstack so to be able to have a working example which would run locally.
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
