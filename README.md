@@ -117,7 +117,14 @@ aws --endpoint-url=http://localhost:4566 dynamodb scan --table-name metadata-tab
 ### MetadataHandlerLambda Project.
 
 #### Execute unit tests
-```
+```shell
     cd "cdk/MetadataHandlerLambda/test/MetadataHandlerLambda.Tests"
     dotnet test
 ```
+
+> [!NOTE]  
+> Working with:  
+> - Docker version 27.3.1, build ce12230  
+> - .NET SDK version 8.0.404  
+> - cdk version 2.166.0 (build 7bb9203)   
+> - aws-cli/2.15.52 Python/3.11.8 Windows/10 exe/AMD64
